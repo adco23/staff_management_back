@@ -17,7 +17,7 @@ public class Course implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String year;
+    private String course;
 
     private String division;
 
