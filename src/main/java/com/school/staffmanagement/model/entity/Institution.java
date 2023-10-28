@@ -21,5 +21,5 @@ public class Institution {
     private String phone;
 
     @OneToMany(mappedBy = "institution", cascade = CascadeType.ALL)
-    private List<SchoolYear> schoolYears;
+    private List<Course> courses;
 }

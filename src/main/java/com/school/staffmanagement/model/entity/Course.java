@@ -12,7 +12,7 @@ import java.io.Serializable;
 @Builder
 @Entity
 @Table(name = "school_year")
-public class SchoolYear implements Serializable {
+public class Course implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
