@@ -28,7 +28,7 @@ public class CourseImplService implements ICourseService {
     @Transactional
     @Override
     public Course save(CourseDto courseDto) {
-        if (courseRepository.existsById(courseDto.getId())) {
+        if (courseDto.getId() != null && courseRepository.existsById(courseDto.getId())) {
             Course existing = courseRepository.findById(courseDto.getId()).orElse(null);
             Course course = Course.builder()
                     .id(existing.getId())
