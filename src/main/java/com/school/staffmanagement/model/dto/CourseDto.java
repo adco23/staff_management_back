@@ -16,4 +16,8 @@ public class CourseDto implements Serializable {
     private String shift;
     private String title;
     private Long institution;
+
+    public void setTitle(String title) {
+        this.title = (title != null) ? title : "";
+    }
 }

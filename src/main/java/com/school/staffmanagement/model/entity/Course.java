@@ -23,9 +23,16 @@ public class Course implements Serializable {
 
     private String shift;
 
-    private String title;
+    private String title = "";
 
     @ManyToOne
     @JoinColumn(name = "institution_id", nullable = false)
     private Institution institution;
+
+    @PrePersist
+    public void prePersist() {
+        if (title == null) {
+            title = "";
+        }
+    }
 }

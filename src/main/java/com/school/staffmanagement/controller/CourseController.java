@@ -41,7 +41,7 @@ public class CourseController {
                                     .course(course.getCourse())
                                     .division(course.getDivision())
                                     .shift(course.getShift())
-                                    .title(course.getTitle())
+                                    .title((course.getTitle() != null) ? course.getTitle() : "")
                                     .institution(course.getInstitution().getName())
                                     .build())
                             .build()
@@ -63,7 +63,7 @@ public class CourseController {
                             .course(course.getCourse())
                             .division(course.getDivision())
                             .shift(course.getShift())
-                            .title(course.getTitle())
+                            .title((course.getTitle() != null) ? course.getTitle() : "")
                             .institution(course.getInstitution().getName())
                             .build())
                     .build(), HttpStatus.CREATED);

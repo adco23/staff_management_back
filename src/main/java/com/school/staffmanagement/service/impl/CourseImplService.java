@@ -84,7 +84,7 @@ public class CourseImplService implements ICourseService {
                     .id(course.getId())
                     .course(course.getCourse())
                     .division(course.getDivision())
-                    .title(course.getTitle())
+                    .title((course.getTitle() != null) ? course.getTitle() : "")
                     .shift(course.getShift())
                     .institution(course.getInstitution().getName())
                     .build();
