@@ -2,10 +2,12 @@ package com.school.staffmanagement.controller;
 
 import com.school.staffmanagement.exception.BadRequestException;
 import com.school.staffmanagement.exception.ResourceNotFoundException;
+import com.school.staffmanagement.model.dto.CourseDto;
 import com.school.staffmanagement.model.dto.InstitutionDto;
-import com.school.staffmanagement.model.entity.Client;
+import com.school.staffmanagement.model.dto.response.CourseResponse;
 import com.school.staffmanagement.model.entity.Institution;
 import com.school.staffmanagement.model.payload.MessageResponse;
+import com.school.staffmanagement.service.ICourseService;
 import com.school.staffmanagement.service.IInstitutionService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,20 +16,25 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/institutions")
 public class InstitutionController {
     @Autowired
     private IInstitutionService institutionService;
 
-    @GetMapping("/{id}")
-    public ResponseEntity<?> showById(@PathVariable Long id) {
+    @Autowired
+    private ICourseService courseService;
+
+    @GetMapping("/{institutionId}")
+    public ResponseEntity<?> showById(@PathVariable Long institutionId) {
         try {
-            if (!institutionService.existsById(id)) {
-                throw new ResourceNotFoundException("institution", "id", id);
+            if (!institutionService.existsById(institutionId)) {
+                throw new ResourceNotFoundException("institution", "id", institutionId);
             }
 
-            Institution institution = institutionService.findById(id);
+            Institution institution = institutionService.findById(institutionId);
 
             return new ResponseEntity<>(MessageResponse.builder()
                     .message("OK")
@@ -41,6 +48,22 @@ public class InstitutionController {
         } catch (DataAccessException e) {
             throw new BadRequestException(e.getMessage());
         }
+    }
+
+    @GetMapping("/{institutionId}/courses")
+    public ResponseEntity<?> showCourses(@PathVariable Long institutionId) {
+        List<CourseResponse> coursesList = courseService.listByInstitution(institutionId);
+
+        if (coursesList == null || coursesList.isEmpty()) {
+            throw new ResourceNotFoundException("courses", "institution ID", institutionId);
+        }
+
+        return new ResponseEntity<>(
+                MessageResponse.builder()
+                        .message("OK")
+                        .data(coursesList)
+                        .build()
+                , HttpStatus.OK);
     }
 
     @PostMapping("")
@@ -62,15 +85,15 @@ public class InstitutionController {
         }
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<?> update(@RequestBody @Valid InstitutionDto request, @PathVariable Long id) {
+    @PutMapping("/{institutionId}")
+    public ResponseEntity<?> update(@RequestBody @Valid InstitutionDto request, @PathVariable Long institutionId) {
         Institution institution = null;
         try {
-            if (!institutionService.existsById(id)) {
-                throw new ResourceNotFoundException("institution", "id", id);
+            if (!institutionService.existsById(institutionId)) {
+                throw new ResourceNotFoundException("institution", "id", institutionId);
             }
 
-            request.setId(id);
+            request.setId(institutionId);
 
             institution = institutionService.save(request);
             return new ResponseEntity<>(MessageResponse.builder()
@@ -87,10 +110,10 @@ public class InstitutionController {
         }
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable Long id) {
+    @DeleteMapping("/{institutionId}")
+    public ResponseEntity<?> delete(@PathVariable Long institutionId) {
         try {
-            Institution institution = institutionService.findById(id);
+            Institution institution = institutionService.findById(institutionId);
             institutionService.delete(institution);
             return new ResponseEntity<>(institution, HttpStatus.NO_CONTENT);
         } catch (DataAccessException e) {

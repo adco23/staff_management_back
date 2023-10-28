@@ -11,7 +11,7 @@ import java.io.Serializable;
 @ToString
 @Builder
 @Entity
-@Table(name = "school_year")
+@Table(name = "course")
 public class Course implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

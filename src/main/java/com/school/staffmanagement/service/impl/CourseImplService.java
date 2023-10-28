@@ -1,14 +1,20 @@
 package com.school.staffmanagement.service.impl;
 
 import com.school.staffmanagement.model.dto.CourseDto;
+import com.school.staffmanagement.model.dto.response.CourseResponse;
 import com.school.staffmanagement.model.entity.Course;
 import com.school.staffmanagement.model.entity.Institution;
 import com.school.staffmanagement.repository.CourseRepository;
 import com.school.staffmanagement.repository.InstitutionRepository;
 import com.school.staffmanagement.service.ICourseService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 @Service
 public class CourseImplService implements ICourseService {
@@ -64,5 +70,28 @@ public class CourseImplService implements ICourseService {
     @Override
     public boolean existsById(Long id) {
         return courseRepository.existsById(id);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<CourseResponse> listByInstitution(Long institutionId) {
+        List<Course> list = courseRepository.findByInstitutionId(institutionId);
+
+        List<CourseResponse> listDto = new ArrayList<>();
+
+        for (Course course: list) {
+            CourseResponse courseResponse = CourseResponse.builder()
+                    .id(course.getId())
+                    .course(course.getCourse())
+                    .division(course.getDivision())
+                    .title(course.getTitle())
+                    .shift(course.getShift())
+                    .institution(course.getInstitution().getName())
+                    .build();
+
+            listDto.add(courseResponse);
+        }
+
+        return listDto;
     }
 }
