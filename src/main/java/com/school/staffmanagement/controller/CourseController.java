@@ -11,6 +11,7 @@ import com.school.staffmanagement.model.entity.Course;
 import com.school.staffmanagement.model.entity.Institution;
 import com.school.staffmanagement.model.payload.MessageResponse;
 import com.school.staffmanagement.service.ICourseService;
+import com.school.staffmanagement.service.IInstitutionService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -23,6 +24,9 @@ import org.springframework.web.bind.annotation.*;
 public class CourseController {
     @Autowired
     private ICourseService courseService;
+
+    @Autowired
+    private IInstitutionService institutionService;
 
     @GetMapping("/{id}")
     public ResponseEntity<?> showById( @PathVariable Long id) {
@@ -41,7 +45,7 @@ public class CourseController {
                                     .course(course.getCourse())
                                     .division(course.getDivision())
                                     .shift(course.getShift())
-                                    .title((course.getTitle() != null) ? course.getTitle() : "")
+                                    .title(course.getTitle())
                                     .institution(course.getInstitution().getName())
                                     .build())
                             .build()
@@ -53,9 +57,19 @@ public class CourseController {
 
     @PostMapping("")
     public ResponseEntity<?> create(@Valid @RequestBody CourseDto request) {
-        Course course = null;
+        if (request.getDivision() == null) { request.setDivision(""); }
+        if (request.getShift() == null) { request.setShift(""); }
+        if (request.getTitle() == null) { request.setTitle(""); }
         try {
-            course = courseService.save(request);
+            Institution institution = institutionService.findById(request.getInstitution());
+
+            if (institutionService.existsCourseInInstitution( request.getCourse(), request.getDivision(),
+                    request.getShift(), request.getTitle(), institution )) {
+                throw new BadRequestException("Course already exists");
+            }
+
+            Course course = courseService.save(request);
+
             return new ResponseEntity<>(MessageResponse.builder()
                     .message("OK")
                     .data(CourseResponse.builder()
@@ -63,7 +77,7 @@ public class CourseController {
                             .course(course.getCourse())
                             .division(course.getDivision())
                             .shift(course.getShift())
-                            .title((course.getTitle() != null) ? course.getTitle() : "")
+                            .title(course.getTitle())
                             .institution(course.getInstitution().getName())
                             .build())
                     .build(), HttpStatus.CREATED);

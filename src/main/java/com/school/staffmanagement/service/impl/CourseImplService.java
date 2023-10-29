@@ -1,5 +1,6 @@
 package com.school.staffmanagement.service.impl;
 
+import com.school.staffmanagement.exception.BadRequestException;
 import com.school.staffmanagement.model.dto.CourseDto;
 import com.school.staffmanagement.model.dto.response.CourseResponse;
 import com.school.staffmanagement.model.entity.Course;
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,19 +30,6 @@ public class CourseImplService implements ICourseService {
     @Transactional
     @Override
     public Course save(CourseDto courseDto) {
-        if (courseDto.getId() != null && courseRepository.existsById(courseDto.getId())) {
-            Course existing = courseRepository.findById(courseDto.getId()).orElse(null);
-            Course course = Course.builder()
-                    .id(existing.getId())
-                    .course(courseDto.getCourse())
-                    .division(courseDto.getDivision())
-                    .shift(courseDto.getShift())
-                    .title(courseDto.getTitle())
-                    .institution(existing.getInstitution())
-                    .build();
-            return courseRepository.save(course);
-        }
-
         Institution institution = institutionRepository.findById(courseDto.getInstitution()).orElse(null);
 
         Course course = Course.builder()

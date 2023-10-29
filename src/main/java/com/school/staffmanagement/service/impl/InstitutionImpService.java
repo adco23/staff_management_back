@@ -2,6 +2,7 @@ package com.school.staffmanagement.service.impl;
 
 import com.school.staffmanagement.model.dto.InstitutionDto;
 import com.school.staffmanagement.model.entity.Institution;
+import com.school.staffmanagement.repository.CourseRepository;
 import com.school.staffmanagement.repository.InstitutionRepository;
 import com.school.staffmanagement.service.IInstitutionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,9 @@ public class InstitutionImpService implements IInstitutionService {
 
     @Autowired
     private InstitutionRepository institutionRepository;
+
+    @Autowired
+    private CourseRepository courseRepository;
 
     @Transactional
     @Override
@@ -40,5 +44,10 @@ public class InstitutionImpService implements IInstitutionService {
     @Override
     public boolean existsById(Long id) {
         return institutionRepository.existsById(id);
+    }
+
+    @Override
+    public boolean existsCourseInInstitution(String course, String division, String shift, String title, Institution institution) {
+        return courseRepository.existsByCourseAndDivisionAndShiftAndTitleAndInstitution(course, division, shift, title, institution);
     }
 }

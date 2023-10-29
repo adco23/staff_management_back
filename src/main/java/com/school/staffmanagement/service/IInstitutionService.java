@@ -8,4 +8,5 @@ public interface IInstitutionService {
     Institution findById(Long id);
     void delete(Institution institution);
     boolean existsById(Long id);
+    boolean existsCourseInInstitution(String course, String division, String shift, String title, Institution institution);
 }
