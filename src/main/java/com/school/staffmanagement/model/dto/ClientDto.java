@@ -2,9 +2,6 @@ package com.school.staffmanagement.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.school.staffmanagement.annotations.EnumValue;
-import com.school.staffmanagement.model.enums.ClientRolEnum;
-import com.school.staffmanagement.model.enums.ClientStatusEnum;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;

@@ -9,6 +9,7 @@ import com.school.staffmanagement.model.dto.response.CourseResponse;
 import com.school.staffmanagement.model.entity.Client;
 import com.school.staffmanagement.model.entity.Course;
 import com.school.staffmanagement.model.entity.Institution;
+import com.school.staffmanagement.model.entity.Subject;
 import com.school.staffmanagement.model.payload.MessageResponse;
 import com.school.staffmanagement.service.ICourseService;
 import com.school.staffmanagement.service.IInstitutionService;
@@ -18,6 +19,8 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/courses")

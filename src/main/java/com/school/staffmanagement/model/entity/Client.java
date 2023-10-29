@@ -1,7 +1,5 @@
 package com.school.staffmanagement.model.entity;
 
-import com.school.staffmanagement.model.enums.ClientRolEnum;
-import com.school.staffmanagement.model.enums.ClientStatusEnum;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;

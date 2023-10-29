@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -28,6 +29,9 @@ public class Course implements Serializable {
     @ManyToOne
     @JoinColumn(name = "institution_id", nullable = false)
     private Institution institution;
+
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
+    private List<Subject> subjects;
 
     @PrePersist
     public void prePersist() {
