@@ -2,9 +2,11 @@ package com.school.staffmanagement.model.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-@JsonPropertyOrder({"email", "message", "jwt", "status"})
+import java.util.List;
+
+@JsonPropertyOrder({"email", "message", "roles", "jwt", "status"})
 public record AuthResponse(String email,
                            String message,
-                           String jwt,
-                           boolean status) {
+                           List<String> roles,
+                           String jwt) {
 }

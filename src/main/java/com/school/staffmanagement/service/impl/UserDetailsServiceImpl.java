@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,10 +26,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -87,9 +85,16 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         Authentication authentication = this.authenticate(username, password);
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
+        List<String> roles = authentication.getAuthorities()
+                .stream()
+                .map(GrantedAuthority::getAuthority)
+                .filter(authority -> authority.startsWith("ROLE_"))
+                .map(role -> role.substring(5))
+                .collect(Collectors.toList());
+
         String accessToken = jwtUtils.createToken(authentication);
 
-        return new AuthResponse(username, StaffResponseMessages.USER_LOGIN_OK, accessToken, true);
+        return new AuthResponse(username, StaffResponseMessages.USER_LOGIN_OK, roles, accessToken);
     }
 
     public Authentication authenticate(String username, String password) {
@@ -140,8 +145,15 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         Authentication authentication = new UsernamePasswordAuthenticationToken(userCreated.getEmail(), userCreated.getPassword(), authorityList);
 
+        List<String> userCreatedRoles = authentication.getAuthorities()
+                .stream()
+                .map(GrantedAuthority::getAuthority)
+                .filter(authority -> authority.startsWith("ROLE_"))
+                .map(role -> role.substring(5))
+                .collect(Collectors.toList());
+
         String accessToken = jwtUtils.createToken(authentication);
 
-        return new AuthResponse(userCreated.getEmail(), StaffResponseMessages.USER_SIGNUP_OK, accessToken, true);
+        return new AuthResponse(userCreated.getEmail(), StaffResponseMessages.USER_SIGNUP_OK, userCreatedRoles, accessToken);
     }
 }
