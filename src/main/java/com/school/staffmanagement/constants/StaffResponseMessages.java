@@ -2,25 +2,25 @@ package com.school.staffmanagement.constants;
 
 public class StaffResponseMessages {
     // Mensajes de éxito
-    public static final String SUCCESS = "La operación se realizó correctamente";
-    public static final String USER_LOGIN_OK = "El usuario inicio sesión correctamente";
-    public static final String USER_SIGNUP_OK = "El usuario se creó correctamente";
+    public static final String SUCCESS = "Operation successful";
+    public static final String USER_LOGIN_OK = "User logged successfully";
+    public static final String USER_SIGNUP_OK = "User created successfully";
 
     // Mensajes de error general
-    public static final String INTERNAL_SERVER_ERROR = "Ha ocurrido un error interno en el servidor";
+    public static final String INTERNAL_SERVER_ERROR = "Internal server error";
 
     // Mensajes de error de validación
-    public static final String VALIDATION_ERROR = "La solicitud contiene datos no válidos";
-    public static final String EMAIL_IS_REQUIRED = "El correo es obligatoio";
-    public static final String PASSWORD_IS_REQUIRED = "La contraseña es obligatoria";
-    public static final String ROLE_IS_INVALID = "Rol/s inválido/s";
-    public static final String ROLE_IS_REQUIRED = "El rol es obligatorio";
+    public static final String VALIDATION_ERROR = "Request has invalid data";
+    public static final String EMAIL_IS_REQUIRED = "Email is required";
+    public static final String PASSWORD_IS_REQUIRED = "Password is required";
+    public static final String ROLE_IS_INVALID = "Invalid role/s";
+    public static final String ROLE_IS_REQUIRED = "Rol is required";
 
     // Mensajes de error específicos
-    public static final String RESOURCE_NOT_FOUND = "El recurso solicitado no se ha encontrado";
-    public static final String TOKEN_INVALID = "Token inválido, no autorizado";
-    public static final String BAD_CREDENTIALS = "Correo o contraseña invalido";
-    public static final String USER_NOT_FOUND = "El usuario %s no existe";
+    public static final String RESOURCE_NOT_FOUND = "Resource not found";
+    public static final String TOKEN_INVALID = "Invalid token, not authorized";
+    public static final String BAD_CREDENTIALS = "Invalid email or password";
+    public static final String USER_NOT_FOUND = "User %s not found";
 
 
 
