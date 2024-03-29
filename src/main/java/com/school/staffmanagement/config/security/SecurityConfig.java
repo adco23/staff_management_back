@@ -42,12 +42,7 @@ public class SecurityConfig {
 
                     // EP PRIVADOS
                     // http.requestMatchers(HttpMethod.GET, "/auth/hello/user").hasRole("user");
-                    // http.requestMatchers(HttpMethod.GET, "/test/get").hasRole("admin");
-                    http.requestMatchers(HttpMethod.GET, "/test/get").hasAuthority("READ");
-                    http.requestMatchers(HttpMethod.GET, "/test/admin").hasRole("ADMIN");
-                    http.requestMatchers(HttpMethod.POST, "/test/post").hasAuthority("CREATE");
-                    http.requestMatchers(HttpMethod.DELETE, "/test/delete").hasAuthority("DELETE");
-                    http.requestMatchers(HttpMethod.PUT, "/test/put").hasAuthority("UPDATE");
+                    //http.requestMatchers(HttpMethod.POST, "/test/post").hasAuthority("CREATE");
 
                     // EP NO ESPECIFICADOS
                     // http.anyRequest().authenticated(); // Los usuarios deben estar autenticados

@@ -2,6 +2,7 @@ package com.school.staffmanagement.service.impl;
 
 
 import com.school.staffmanagement.config.security.jwt.JwtUtils;
+import com.school.staffmanagement.constants.StaffResponseMessages;
 import com.school.staffmanagement.model.dto.request.AuthCreateUserRequest;
 import com.school.staffmanagement.model.dto.request.AuthLoginRequest;
 import com.school.staffmanagement.model.dto.response.AuthResponse;
@@ -52,10 +53,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         UserEntity user = userRepository.findByEmail(username);
 
-        log.info("user {}", user);
+        log.info("User found: {}", user);
 
         if (Objects.isNull(user)){
-            throw new UsernameNotFoundException("El usuario " + username + " no existe.");
+            throw new UsernameNotFoundException(StaffResponseMessages.userNotFoundMsg(username));
         }
 
         List<SimpleGrantedAuthority> authorityList = new ArrayList<>();
@@ -88,18 +89,18 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         String accessToken = jwtUtils.createToken(authentication);
 
-        return new AuthResponse(username, "User logged successfully", accessToken, true);
+        return new AuthResponse(username, StaffResponseMessages.USER_LOGIN_OK, accessToken, true);
     }
 
     public Authentication authenticate(String username, String password) {
         UserDetails userDetails = this.loadUserByUsername(username);
 
         if (userDetails == null) {
-            throw new BadCredentialsException("Invalid username or password.");
+            throw new BadCredentialsException(StaffResponseMessages.BAD_CREDENTIALS);
         }
 
         if (!passwordEncoder.matches(password, userDetails.getPassword())) {
-            throw new BadCredentialsException("Invalid username or password.");
+            throw new BadCredentialsException(StaffResponseMessages.BAD_CREDENTIALS);
         }
 
         return new UsernamePasswordAuthenticationToken(username, userDetails.getPassword(), userDetails.getAuthorities());
@@ -108,12 +109,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public AuthResponse createUser(AuthCreateUserRequest authCreateUserRequest) {
         String username = authCreateUserRequest.email();
         String password = authCreateUserRequest.password();
-        List<String> roles = authCreateUserRequest.roleRequest().roleListName();
+        List<String> roles = authCreateUserRequest.roles();
 
         Set<RoleEntity> roleEntities = roleRepository.findRoleEntitiesByNameIn(roles).stream().collect(Collectors.toSet());
 
         if (roleEntities.isEmpty()) {
-            throw new IllegalArgumentException("The roles specified does not exist.");
+            throw new IllegalArgumentException(StaffResponseMessages.ROLE_IS_REQUIRED);
         }
 
         UserEntity userEntity = UserEntity.builder()
@@ -141,6 +142,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         String accessToken = jwtUtils.createToken(authentication);
 
-        return new AuthResponse(userCreated.getEmail(), "User created successfully", accessToken, true);
+        return new AuthResponse(userCreated.getEmail(), StaffResponseMessages.USER_SIGNUP_OK, accessToken, true);
     }
 }
