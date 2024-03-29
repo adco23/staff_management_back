@@ -37,19 +37,19 @@ public class StaffManagementApplication {
 
 			// CREACION DE USUARIOS
 			UserEntity userAdri = UserEntity.builder()
-					.username("adri").password("$2a$10$5QSu0mxbsibEXRwI8CkFE.je0/oKwYK.Zz4lpYnTu1nfB0gRLreYa").email("adri@test.com")
+					.email("adri@test.com").password("$2a$10$5QSu0mxbsibEXRwI8CkFE.je0/oKwYK.Zz4lpYnTu1nfB0gRLreYa")
 					.isEnabled(true).accountNoExpired(true).accountNoLocked(true).credentialNoExpired(true)
 					.roles(Set.of(adminRole, devRole))
 					.build();
 
 			UserEntity userPepa = UserEntity.builder()
-					.username("pepa").password("$2a$10$5QSu0mxbsibEXRwI8CkFE.je0/oKwYK.Zz4lpYnTu1nfB0gRLreYa").email("pepa@test.com")
+					.email("pepa@test.com").password("$2a$10$5QSu0mxbsibEXRwI8CkFE.je0/oKwYK.Zz4lpYnTu1nfB0gRLreYa")
 					.isEnabled(true).accountNoExpired(true).accountNoLocked(true).credentialNoExpired(true)
 					.roles(Set.of(userRole))
 					.build();
 
 			UserEntity userFulano = UserEntity.builder()
-					.username("fulano").password("$2a$10$5QSu0mxbsibEXRwI8CkFE.je0/oKwYK.Zz4lpYnTu1nfB0gRLreYa").email("fulano@test.com")
+					.email("fulano@test.com").password("$2a$10$5QSu0mxbsibEXRwI8CkFE.je0/oKwYK.Zz4lpYnTu1nfB0gRLreYa")
 					.isEnabled(true).accountNoExpired(true).accountNoLocked(true).credentialNoExpired(true)
 					.roles(Set.of(guestRole))
 					.build();

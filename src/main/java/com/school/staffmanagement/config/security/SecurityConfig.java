@@ -30,6 +30,8 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.springframework.security.config.Customizer.withDefaults;
+
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -43,6 +45,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return  httpSecurity
                 .csrf(csrf -> csrf.disable())
+                // .cors(withDefaults())
                 //.httpBasic(Customizer.withDefaults())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(http -> {
@@ -62,20 +65,10 @@ public class SecurityConfig {
                     // http.anyRequest().authenticated(); // Los usuarios deben estar autenticados
                     http.anyRequest().denyAll(); // Se rechaza cualquier solicitud a cualquier EP sin importar si está autenticado
                 })
+//                .formLogin(form -> form.loginPage("/auth/login"))
                 .addFilterBefore(new JwtValidator(jwtUtils), BasicAuthenticationFilter.class)
                 .build();
     }
-
-    // CONFIG CON ANOTACIONES EN LOS CONTROLADORES
-//    @Bean
-//    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-//        return  httpSecurity
-//                .csrf(csrf -> csrf.disable())
-//                .httpBasic(Customizer.withDefaults())
-//                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-//                .addFilterBefore(new JwtValidator(jwtUtils), BasicAuthenticationFilter.class)
-//                .build();
-//    }
 
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
@@ -88,24 +81,6 @@ public class SecurityConfig {
         provider.setUserDetailsService(userDetailsService);
         return provider;
     }
-
-//    public UserDetailsService userDetailsService() {
-//        List<UserDetails> userDetailsList = new ArrayList<>();
-//
-//        userDetailsList.add(
-//                User.withUsername("adri")
-//                    .password("1234")
-//                    .roles("admin")
-//                    .build());
-//
-//        userDetailsList.add(
-//                User.withUsername("pepa")
-//                    .password("1234")
-//                    .roles("user")
-//                    .build());
-//
-//        return new InMemoryUserDetailsManager(userDetailsList);
-//    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {

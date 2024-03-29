@@ -17,6 +17,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -49,9 +50,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         log.info("LoadUserByUsername {}", username);
 
-        UserEntity user = userRepository.findByUsername(username);
+        UserEntity user = userRepository.findByEmail(username);
 
         log.info("user {}", user);
+
         if (Objects.isNull(user)){
             throw new UsernameNotFoundException("El usuario " + username + " no existe.");
         }
@@ -65,8 +67,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .flatMap(role -> role.getPermissions().stream())
                 .forEach(permission -> authorityList.add(new SimpleGrantedAuthority(permission.getName())));
 
-        return new org.springframework.security.core.userdetails.User(
-                user.getUsername(),
+        return new User(
+                user.getEmail(),
                 user.getPassword(),
                 user.isEnabled(),
                 user.isAccountNoExpired(),
@@ -76,7 +78,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     public AuthResponse loginUser(AuthLoginRequest authLoginRequest) {
-        String username = authLoginRequest.username();
+        log.info("Login {}", authLoginRequest);
+
+        String username = authLoginRequest.email();
         String password = authLoginRequest.password();
 
         Authentication authentication = this.authenticate(username, password);
@@ -102,7 +106,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     public AuthResponse createUser(AuthCreateUserRequest authCreateUserRequest) {
-        String username = authCreateUserRequest.username();
+        String username = authCreateUserRequest.email();
         String password = authCreateUserRequest.password();
         List<String> roles = authCreateUserRequest.roleRequest().roleListName();
 
@@ -113,7 +117,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         }
 
         UserEntity userEntity = UserEntity.builder()
-                .username(username)
+                .email(username)
                 .password(passwordEncoder.encode(password))
                 .email(authCreateUserRequest.email())
                 .roles(roleEntities)
@@ -133,10 +137,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .flatMap(role -> role.getPermissions().stream())
                 .forEach(permission -> authorityList.add(new SimpleGrantedAuthority(permission.getName())));
 
-        Authentication authentication = new UsernamePasswordAuthenticationToken(userCreated.getUsername(), userCreated.getPassword(), authorityList);
+        Authentication authentication = new UsernamePasswordAuthenticationToken(userCreated.getEmail(), userCreated.getPassword(), authorityList);
 
         String accessToken = jwtUtils.createToken(authentication);
 
-        return new AuthResponse(userCreated.getUsername(), "User created successfully", accessToken, true);
+        return new AuthResponse(userCreated.getEmail(), "User created successfully", accessToken, true);
     }
 }
