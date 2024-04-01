@@ -8,6 +8,7 @@ import com.school.staffmanagement.model.dto.request.AuthLoginRequest;
 import com.school.staffmanagement.model.dto.response.AuthResponse;
 import com.school.staffmanagement.model.entity.RoleEntity;
 import com.school.staffmanagement.model.entity.UserEntity;
+import com.school.staffmanagement.model.enums.RoleEnum;
 import com.school.staffmanagement.repository.RoleRepository;
 import com.school.staffmanagement.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -114,12 +115,18 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public AuthResponse createUser(AuthCreateUserRequest authCreateUserRequest) {
         String username = authCreateUserRequest.email();
         String password = authCreateUserRequest.password();
-        List<String> roles = authCreateUserRequest.roles();
+        List<String> roles = List.of("USER");
 
         Set<RoleEntity> roleEntities = roleRepository.findRoleEntitiesByNameIn(roles).stream().collect(Collectors.toSet());
 
-        if (roleEntities.isEmpty()) {
+        /* if (roleEntities.isEmpty()) {
             throw new IllegalArgumentException(StaffResponseMessages.ROLE_IS_REQUIRED);
+        } */
+
+        UserEntity existingUser = userRepository.findByEmail(authCreateUserRequest.email());
+
+        if (existingUser != null) {
+            throw new IllegalArgumentException((StaffResponseMessages.userAlreadyExistsMsg(username)));
         }
 
         UserEntity userEntity = UserEntity.builder()

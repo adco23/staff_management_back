@@ -9,7 +9,7 @@ import java.util.List;
 public class ValidRoleValidator implements ConstraintValidator<ValidRole, String> {
     @Override
     public boolean isValid(String role, ConstraintValidatorContext context) {
-        List<String> allowedValues = List.of("USER", "ADMIN", "GUEST");
-        return role != null && allowedValues.contains(role);
+        List<String> allowedValues = List.of("USER", "GUEST");
+        return role != null && (allowedValues.contains(role) || role.isEmpty());
     }
 }

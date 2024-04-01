@@ -8,7 +8,8 @@ import java.util.List;
 
 public record AuthCreateUserRequest(
         @NotBlank(message = StaffResponseMessages.EMAIL_IS_REQUIRED) String email,
-        @NotBlank(message = StaffResponseMessages.PASSWORD_IS_REQUIRED) String password,
+        @NotBlank(message = StaffResponseMessages.PASSWORD_IS_REQUIRED) String password
 
-        List<@ValidRole String> roles
-) {}
+//        List<@ValidRole String> roles
+) {
+}

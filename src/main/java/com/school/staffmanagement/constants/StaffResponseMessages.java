@@ -20,7 +20,8 @@ public class StaffResponseMessages {
     public static final String RESOURCE_NOT_FOUND = "Resource not found";
     public static final String TOKEN_INVALID = "Invalid token, not authorized";
     public static final String BAD_CREDENTIALS = "Invalid email or password";
-    public static final String USER_NOT_FOUND = "User %s not found";
+    public static final String USER_NOT_FOUND = "User '%s' not found";
+    public static final String USER_ALREADY_EXISTS = "User '%s' already exists";
 
 
 
@@ -30,5 +31,9 @@ public class StaffResponseMessages {
 
     public static String userNotFoundMsg(String data) {
         return String.format(USER_NOT_FOUND, data);
+    }
+
+    public static String userAlreadyExistsMsg(String data) {
+        return String.format(USER_ALREADY_EXISTS, data);
     }
 }
